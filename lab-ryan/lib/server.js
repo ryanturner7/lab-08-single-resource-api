@@ -2,16 +2,16 @@
 
 const http = require('http');
 const router = require('./router.js');
-const uuid = require('uuid');
+const Article = require('../models/article.js');
 
-var storage = {};
+let storage = {};
 
 router.get('/hello', (req, res) => {
   res.write('yeyyeyeyye');
   res.end();
 });
 
-router.post('/api/notes', (req, res) => {
+router.post('/api/article', (req, res) => {
   console.log('hit /api/notes');
   if(!req.body.content){
     res.write(400);
