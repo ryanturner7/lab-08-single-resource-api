@@ -26,17 +26,19 @@ router.delete = (pathname, callback) => {
 router.put = (pathname, callback) => {
   routes.PUT[pathname] = callback;
 };
-requestParse(req, (err) => {
-  if(err) {
-    res.writeHead(4000);
-    res.end();
-    return;
-  }
-  let routeHandler = routes[req.method][req.url.pathname];
-  if(routeHandler) {
-    routeHandler(req, res);
-  } else {
-    res.writeHead(400);
-    res.end();
-  }
-});
+router.route = (req, res) => {
+  requestParse(req, (err) => {
+    if(err) {
+      res.writeHead(400);
+      res.end();
+      return;
+    }
+    let routeHandler = routes[req.method][req.url.pathname];
+    if(routeHandler) {
+      routeHandler(req, res);
+    } else {
+      res.writeHead(400);
+      res.end();
+    }
+  });
+};

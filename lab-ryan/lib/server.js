@@ -2,20 +2,21 @@
 
 const http = require('http');
 const router = require('./router.js');
-const requestParse = require('./request-parse.js');
 const uuid = require('uuid');
-const storage = require('../model/storage.js');
+const storage = require('../models/storage.js');
 const Article = require('../models/article.js');
 
-router.post('/api/article', (req, res) => {
-  console.log('hit /api/notes');
-  if(!req.body){
-    res.writeHead(400);
+router.post('/api/articles', (req, res) => {
+  let body = req.body;
+  if(!body || !body.title || !body.author){
+    res.write(400, {
+      'Content-type' : 'application/json',
+    });
     res.end();
     return;
   }
   let newArticle = new Article (req.body.title, req.body.author);
-  article.id = uuvd.v1();
+  newArticle.id = uuid.v1();
   storage[newArticle.id] = newArticle;
 
   res.writeHead(201, {
@@ -26,16 +27,17 @@ router.post('/api/article', (req, res) => {
   return;
 });
 
-router.get('/api/article', (req, res) => {
+router.get('/api/articles', (req, res) => {
   if(!req.url.query.id){
     res.writeHead(400);
-    res.write('bad request');
+    res.write('Bad Request.');
     res.end();
     return;
   }
 
   if(!storage[req.url.query.id]){
     res.writeHead(404);
+    res.write('Not Found.');
     res.end();
     return;
   }
@@ -47,6 +49,7 @@ router.get('/api/article', (req, res) => {
     res.end();
   }
 });
+
 router.put('/api/articles', (req, res) => {
   let body = req.body;
   if(!body || !body.title || !body.author){
@@ -59,7 +62,7 @@ router.put('/api/articles', (req, res) => {
   });
   storage[req.url.query.id].title = req.body.title;
   storage[req.url.query.id].author = req.body.author;
-  res.writeHead(JSON.stringify(storage[req.url.query.id]));
+  res.write(JSON.stringify(storage[req.url.query.id]));
   res.end();
   return;
 });

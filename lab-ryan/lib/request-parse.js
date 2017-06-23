@@ -1,6 +1,6 @@
 'use strict';
 
-const url = require('url')
+const url = require('url');
 const querystring = require('querystring');
 
 // this modudle will parse the url into an object
