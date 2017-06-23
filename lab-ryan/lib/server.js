@@ -59,23 +59,23 @@ router.put('/api/articles', (req, res) => {
   });
   storage[req.url.query.id].title = req.body.title;
   storage[req.url.query.id].author = req.body.author;
-    res.writeHead(JSON.stringify(storage[req.url.query.id]));
+  res.writeHead(JSON.stringify(storage[req.url.query.id]));
+  res.end();
+  return;
+});
+router.delete('/api/article', (req, res) => {
+  if(!storage[req.url.query.id]){
+    res.writeHead(404);
+    res.write('invalid id');
+
     res.end();
     return;
-  })
-  router.delete('/api/article', (req, res) => {
-    if(!storage[req.url.query.id]){
-      res.writeHead(404);
-      res.write('invalid id');
-    });
-      res.end();
-      return;
-    }
-    delete storage[req.url.query.id];
-    res.writeHead(204, {
-      'Content-type' : 'application/json',
+  }
+  delete storage[req.url.query.id];
+  res.writeHead(204, {
+    'Content-type' : 'application/json',
   });
-res.write(JSON.stringify(storage[req.url.query.id]));
-res.end();
+  res.write(JSON.stringify(storage[req.url.query.id]));
+  res.end();
 });
-const serverr = module.exports = http.createServer(router.route);
+const server = module.exports = http.createServer(router.route);
